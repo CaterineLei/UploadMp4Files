@@ -1,0 +1,84 @@
+﻿@model List<UploadMp4Files.Models.FileModel>
+
+@{
+    ViewData["Title"] = "Display Uploade Files";
+}
+
+
+<div class="container">
+   
+    <div class="panel-group">
+        <div class="panel panel-info">
+            <div class="panel-heading" id="videoTitle">Select a video from the table to start playback</div>
+            <div class="panel-body" id="videoBody">
+                <video style="width:100%;height:300px"  id="playVideo"  type="video/mp4" controls autoplay>
+                </video>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            
+            <div class="panel-body">
+             <table class="table table-striped table-bordered">
+                 <thead>
+                     <tr>
+                         <th colspan="2">Video file name</th>
+                         <th>File size</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                        @foreach (var item in Model)
+                        {
+                           
+
+                            <tr role="button" class="clickable-row" onclick="setVedio('@Url.Content(@item.FilePath)')">
+                     <td colspan="2">@item.FileName</td>
+                     <td>@item.DisplayFileSize</td>
+                 </tr>
+
+               }
+                 </tbody>
+             </table>
+
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+
+
+@section scripts {
+<script type="text/javascript">
+
+    function setVedio(path) {
+        document.getElementById("playVideo").setAttribute("src", path);
+    }
+
+
+</script>
+}
+<style type="text/css">
+    
+    tbody tr {
+        cursor: pointer;
+        
+    }
+    tbody tr:hover {
+        background: gray;
+
+    }
+   
+    #videoTitle {
+        background-color:cadetblue;
+
+    }
+
+    
+
+</style>
+
+

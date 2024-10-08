@@ -1,0 +1,101 @@
+﻿@model MultipleFilesModel
+
+@{
+    ViewData["Title"] = "Multiple Files Upload";
+}
+
+<form asp-action="MultiUpload" asp-controller="Home" method="post" enctype="multipart/form-data">
+
+    @if (Model.IsResponse)
+    {
+        if (Model.IsSuccess)
+        {
+            <div class="alert alert-success" id="successmsg">
+                @Model.Message
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger" id="failedmsg">
+                @Model.Message
+            </div>
+        }
+    }
+    <div class="row mt-2">
+        <div class="col-12">
+            <label class="col-form-label">Choose MP4 files to upload to the Video Catalogue</label>
+            <input id="fileUpload" asp-for="Files" type="file" class="form-control" accept=".mp4"  onchange="checkFileSize()" multiple />
+            <div id="filesInfo"></div>
+            <span asp-validation-for="Files" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Upload</button>
+        </div>
+    </div>
+</form>
+@section scripts {
+    <script type="text/javascript">
+
+        function checkFileSize() {
+            
+            var inputTag = document.getElementById("fileUpload");
+            var maxFileSize = 209715200;
+            let removeFiles = [];
+            var filesInfoTag = document.getElementById("filesInfo");
+            filesInfoTag.innerHTML = "";
+
+            for (var i = 0; i < inputTag.files.length; ++i) {
+                
+                if (inputTag.files[i].type.toLowerCase() !== "video/mp4") {
+                    alert(inputTag.files[i].name + " is not a mp4 file");
+                    removeFiles.push(i);
+
+                    continue;
+                }else if (inputTag.files[i].size > maxFileSize) {
+                    alert(inputTag.files[i].name + " is more than 200MB");
+
+                    removeFiles.push(i);
+                    continue;
+                }else{
+                    filesInfoTag.innerHTML = filesInfoTag.innerHTML+ `
+                                <p>File Name: ${inputTag.files[i].name}</p>
+                               <p>File Size: ${inputTag.files[i].size} bytes</p>
+                              `;
+
+                 }
+
+
+            }
+            if (removeFiles.length > 0) {
+                for (var i = 0; i < removeFiles.length; ++i) {
+                    inputTag.files.splice(removeFiles[i], 1);
+                }
+                if (inputTag.files.length == 0) {
+                    inputTag.value = "";
+                }else{
+                    inputTag.value = inputTag.files.length+" files are chosen."
+
+                }
+            }
+
+           
+        }
+
+
+    </script>
+}
+
+<style>
+  label {
+        
+        color: cadetblue
+        line-height: 1.2;
+        padding: 15px;
+        border-radius: 4px;
+      
+  }
+
+</style>
